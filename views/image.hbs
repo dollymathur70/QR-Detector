@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QCodeDecoder - Image</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+  <h1>QCode Decoder also decodes directly from an image</h1>
+
+  <img src="./bower_components/qcode-decoder/tests/assets/qrcode.png" alt="qr code">
+  <button id="decode">Decode!</button>
+
+  <script src="../bower_components/qcode-decoder/build/qcode-decoder.min.js"></script>
+  <script>
+  var qr = new QCodeDecoder();
+  if (!(qr.isCanvasSupported() && qr.hasGetUserMedia())) {
+    alert('Your browser doesn\'t match the required specs.');
+    throw new Error('Canvas and getUserMedia are required');
+  }
+  var btn = document.querySelector('button#decode');
+  var img = document.querySelector('img');
+  btn.onclick = function () {
+    qr.decodeFromImage(img, function (err, result) {
+      if (err) throw err;
+      $.post('/check_availability',{r : result},function (data) {
+          // console.log(data)
+          alert(data);
+      })
+    });
+  };
+  </script>
+</body>
+</html>
